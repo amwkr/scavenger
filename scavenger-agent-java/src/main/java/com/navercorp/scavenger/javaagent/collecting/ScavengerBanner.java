@@ -50,6 +50,11 @@ public class ScavengerBanner {
         if (config.getForceIntervalSeconds() != 0) {
             printlnIfNotEmpty(out, format("force interval seconds", Integer.toString(config.getForceIntervalSeconds())));
         }
+        printlnIfNotEmpty(out, format("regex mode", Boolean.toString(config.isLegacyCompatibilityMode())));
+        printlnIfNotEmpty(out, format("package regex", config.getPackageRegex()));
+        printlnIfNotEmpty(out, format("additional package regex", config.getAdditionalPackageRegex()));
+        printlnIfNotEmpty(out, format("exclude package regex", config.getExcludePackageRegex()));
+
         out.println();
     }
 
