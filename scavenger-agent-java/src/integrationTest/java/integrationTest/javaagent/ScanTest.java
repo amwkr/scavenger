@@ -131,7 +131,7 @@ public class ScanTest {
     private static Pattern scanned(Method method) {
         String[] split = method.toString().split(" ");
         String signature = split[split.length - 1];
-        return AgentLogAssertionUtil.logPattern("com.navercorp.scavenger.javaagent.collecting.CodeBaseScanner",
+        return AgentLogAssertionUtil.logPattern("com.navercorp.scavenger.javaagent.collecting.PathsCodeBaseScanner",
             "[scavenger] " + signature + " is scanned");
     }
 
