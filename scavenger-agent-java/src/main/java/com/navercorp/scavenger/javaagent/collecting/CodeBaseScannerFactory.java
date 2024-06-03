@@ -7,6 +7,10 @@ import com.navercorp.scavenger.javaagent.model.Config;
 
 public class CodeBaseScannerFactory {
     public static CodeBaseScanner create(Config config) {
+        if (config.isRegexMode()) {
+            return new RegexCodeBaseScanner(config);
+        }
+
         return new PathsCodeBaseScanner(config);
     }
 }

@@ -34,32 +34,11 @@ public class ElementMatcherBuilder {
     private final Config config;
 
     public ElementMatcher<TypeDescription> buildClassMatcher() {
-        ElementMatcher.Junction<NamedElement> packageNameMatcher = config.getPackagesWithEndingDot().stream()
-            .map(ElementMatchers::nameStartsWith)
-            .reduce(ElementMatcher.Junction::or)
-            .orElse(none());
+        if (config.isRegexMode()) {
+            return buildRegexClassMatcher();
+        }
 
-        ElementMatcher.Junction<NamedElement> excludePackageMatcher = config.getExcludePackagesWithEndingDot().stream()
-            .map(ElementMatchers::nameStartsWith)
-            .reduce(ElementMatcher.Junction::or)
-            .orElse(none());
-
-        ElementMatcher.Junction<AnnotationSource> annotationMatcher = config.getAnnotations().stream()
-            .map(ElementMatchers::named)
-            .map(ElementMatchers::isAnnotatedWith)
-            .reduce(ElementMatcher.Junction::or)
-            .orElse(any());
-
-        ElementMatcher.Junction<NamedElement> additionalPackageMatcher = config.getAdditionalPackagesWithEndingDot().stream()
-            .map(ElementMatchers::nameStartsWith)
-            .reduce(ElementMatcher.Junction::or)
-            .orElse(none());
-
-        return packageNameMatcher
-            .and(not(isSynthetic()))
-            .and(not(isInterface()))
-            .and(not(excludePackageMatcher))
-            .and(annotationMatcher.or(additionalPackageMatcher));
+        return buildPathsClassMatcher();
     }
 
     public ElementMatcher<MethodDescription> buildMethodMatcher(TypeDescription typeDescription) {
@@ -97,5 +76,61 @@ public class ElementMatcherBuilder {
             .and(declarationMatcher)
             .and(visibilityMatcher)
             .and(trivialMethodMatchers);
+    }
+
+    private ElementMatcher<TypeDescription> buildPathsClassMatcher() {
+        ElementMatcher.Junction<NamedElement> packageNameMatcher = config.getPackagesWithEndingDot().stream()
+            .map(ElementMatchers::nameStartsWith)
+            .reduce(ElementMatcher.Junction::or)
+            .orElse(none());
+
+        ElementMatcher.Junction<NamedElement> excludePackageMatcher = config.getExcludePackagesWithEndingDot().stream()
+            .map(ElementMatchers::nameStartsWith)
+            .reduce(ElementMatcher.Junction::or)
+            .orElse(none());
+
+        ElementMatcher.Junction<AnnotationSource> annotationMatcher = config.getAnnotations().stream()
+            .map(ElementMatchers::named)
+            .map(ElementMatchers::isAnnotatedWith)
+            .reduce(ElementMatcher.Junction::or)
+            .orElse(any());
+
+        ElementMatcher.Junction<NamedElement> additionalPackageMatcher = config.getAdditionalPackagesWithEndingDot().stream()
+            .map(ElementMatchers::nameStartsWith)
+            .reduce(ElementMatcher.Junction::or)
+            .orElse(none());
+
+        return packageNameMatcher
+            .and(not(isSynthetic()))
+            .and(not(isInterface()))
+            .and(not(excludePackageMatcher))
+            .and(annotationMatcher.or(additionalPackageMatcher));
+    }
+
+    private ElementMatcher<TypeDescription> buildRegexClassMatcher() {
+        ElementMatcher.Junction<NamedElement> packageNameMatcher = ElementMatchers.nameMatches(config.getPackageRegex());
+
+        ElementMatcher.Junction<NamedElement> excludePackageMatcher = ElementMatchers.none();
+
+        if (!config.getExcludePackageRegex().isEmpty()) {
+            excludePackageMatcher = ElementMatchers.nameMatches(config.getExcludePackageRegex());
+        }
+
+        ElementMatcher.Junction<AnnotationSource> annotationMatcher = config.getAnnotations().stream()
+            .map(ElementMatchers::named)
+            .map(ElementMatchers::isAnnotatedWith)
+            .reduce(ElementMatcher.Junction::or)
+            .orElse(any());
+
+        ElementMatcher.Junction<NamedElement> additionalPackageMatcher = ElementMatchers.none();
+        if (!config.getAdditionalPackageRegex().isEmpty()) {
+            additionalPackageMatcher = ElementMatchers.nameMatches(config.getAdditionalPackageRegex());
+        }
+
+        return packageNameMatcher
+            .and(not(isSynthetic()))
+            .and(not(isInterface()))
+            .and(not(excludePackageMatcher))
+            .and(annotationMatcher.or(additionalPackageMatcher));
     }
 }
