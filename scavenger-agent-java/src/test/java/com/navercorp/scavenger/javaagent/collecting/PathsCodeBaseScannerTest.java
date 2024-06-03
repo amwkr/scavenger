@@ -18,8 +18,8 @@ import com.navercorp.scavenger.javaagent.model.Method;
 import com.navercorp.scavenger.javaagent.model.Visibility;
 
 @Nested
-@DisplayName("CodeBaseScanner class")
-public class CodeBaseScannerTest {
+@DisplayName("PathsCodeBaseScanner class")
+public class PathsCodeBaseScannerTest {
     Config config;
     CodeBaseScanner scanner;
 
@@ -32,7 +32,7 @@ public class CodeBaseScannerTest {
         props.setProperty("codeBase", file);
         props.setProperty("packages", "com.example.demo");
         config = new Config(props);
-        scanner = new CodeBaseScanner(config);
+        scanner = CodeBaseScannerFactory.create(config);
     }
 
     @Nested
@@ -100,7 +100,7 @@ public class CodeBaseScannerTest {
             @BeforeEach
             public void setExcludedPackages() {
                 config.setExcludePackages(Collections.singletonList("com.example.demo.additional"));
-                scanner = new CodeBaseScanner(config);
+                scanner = new PathsCodeBaseScanner(config);
             }
 
             @Test
@@ -118,7 +118,7 @@ public class CodeBaseScannerTest {
             @BeforeEach
             public void setAnnotationFilter() {
                 config.setAnnotations(Collections.singletonList("org.springframework.web.bind.annotation.RestController"));
-                scanner = new CodeBaseScanner(config);
+                scanner = new PathsCodeBaseScanner(config);
             }
 
             @Test
@@ -136,7 +136,7 @@ public class CodeBaseScannerTest {
                 public void setFilters() {
                     config.setAnnotations(Collections.singletonList("org.springframework.web.bind.annotation.RestController"));
                     config.setAdditionalPackages(Collections.singletonList("com.example.demo.additional"));
-                    scanner = new CodeBaseScanner(config);
+                    scanner = new PathsCodeBaseScanner(config);
                 }
 
                 @Test

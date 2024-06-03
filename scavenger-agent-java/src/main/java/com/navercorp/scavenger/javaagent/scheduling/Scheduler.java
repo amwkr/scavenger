@@ -10,6 +10,7 @@ import io.grpc.StatusRuntimeException;
 import lombok.extern.java.Log;
 
 import com.navercorp.scavenger.javaagent.collecting.CodeBaseScanner;
+import com.navercorp.scavenger.javaagent.collecting.CodeBaseScannerFactory;
 import com.navercorp.scavenger.javaagent.collecting.InvocationTracker;
 import com.navercorp.scavenger.javaagent.model.CodeBase;
 import com.navercorp.scavenger.javaagent.model.Config;
@@ -39,7 +40,7 @@ public class Scheduler implements Runnable {
     private String codeBaseFingerprint;
 
     public Scheduler(Config config) {
-        this(config, new Publisher(config), new CodeBaseScanner(config));
+        this(config, new Publisher(config), CodeBaseScannerFactory.create(config));
     }
 
     public Scheduler(Config config, Publisher publisher, CodeBaseScanner codeBaseScanner) {

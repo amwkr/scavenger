@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.function.Consumer;
 
 import org.assertj.core.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +19,8 @@ import com.navercorp.scavenger.javaagent.model.Config;
 import com.navercorp.scavenger.javaagent.model.Method;
 
 @Nested
-@DisplayName("CodeBaseScanner for Kin")
-public class CodeBaseScannerKinTest {
+@DisplayName("PathsCodeBaseScanner for Kin")
+public class PathsCodeBaseScannerKinTest {
     Config config;
     CodeBaseScanner scanner;
 
@@ -39,7 +38,7 @@ public class CodeBaseScannerKinTest {
         props.setProperty("excludeConstructors", "true");
         props.setProperty("excludeGetterSetter", "true");
         config = new Config(props);
-        scanner = new CodeBaseScanner(config);
+        scanner = CodeBaseScannerFactory.create(config);
     }
 
     @Nested

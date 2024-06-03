@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Test;
 import com.navercorp.scavenger.javaagent.model.Config;
 
 @Nested
-@DisplayName("CodeBaseScanner for Blog")
-public class CodeBaseScannerBlogTest {
+@DisplayName("PathsCodeBaseScanner for Blog")
+public class PathsCodeBaseScannerBlogTest {
     Config config;
     CodeBaseScanner scanner;
 
@@ -34,7 +34,7 @@ public class CodeBaseScannerBlogTest {
         props.setProperty("excludeConstructors", "true");
         props.setProperty("legacyCompatibilityMode", "true");
         config = new Config(props);
-        scanner = new CodeBaseScanner(config);
+        scanner = CodeBaseScannerFactory.create(config);
     }
 
     @Nested
