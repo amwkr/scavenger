@@ -32,6 +32,9 @@ public class Config {
     private List<String> packages;
     private List<String> excludePackages;
     private List<String> additionalPackages;
+    private String packageRegex;
+    private String excludePackageRegex;
+    private String additionalPackageRegex;
     private List<String> annotations;
     private Visibility methodVisibility = Visibility.PROTECTED;
     private boolean excludeConstructors = false;
@@ -51,6 +54,7 @@ public class Config {
 
     private boolean asyncCodeBaseScanMode = false;
     private boolean legacyCompatibilityMode = false;
+    private boolean regexMode = false;
     private boolean debugMode = false;
 
     public Config(Properties props) {
@@ -74,6 +78,10 @@ public class Config {
         appVersion = getStringValue(props, "appVersion", appVersion);
         hostname = getStringValue(props, "hostname", hostname);
 
+        packageRegex = getMandatoryValue(props, "packages", null);
+        excludePackageRegex = getStringValue(props, "excludePackages", "");
+        additionalPackageRegex = getStringValue(props, "additionalPackages", "");
+
         httpConnectTimeoutSeconds = getIntValue(props, "httpConnectTimeoutSeconds", httpConnectTimeoutSeconds);
         httpReadTimeoutSeconds = getIntValue(props, "httpReadTimeoutSeconds", httpReadTimeoutSeconds);
         httpWriteTimeoutSeconds = getIntValue(props, "httpWriteTimeoutSeconds", httpWriteTimeoutSeconds);
@@ -85,6 +93,7 @@ public class Config {
 
         asyncCodeBaseScanMode = getBooleanValue(props, "asyncCodeBaseScanMode", asyncCodeBaseScanMode);
         legacyCompatibilityMode = getBooleanValue(props, "legacyCompatibilityMode", legacyCompatibilityMode);
+        regexMode = getBooleanValue(props, "regexMode", regexMode);
         debugMode = getBooleanValue(props, "debugMode", debugMode);
     }
 
